@@ -1,5 +1,5 @@
 'use strict';
-import { Infomation } from "./showInfo.js";
+import { Infomation } from "./info-algo";
 
 //variable for text
 export const startBtn = document.getElementById("start");
