@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="./CSS/style.css">
+    <link rel="stylesheet" href="./CSS/widowStyle.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+    </style>
+    <title>SortingAlgorithmVisualization</title>
+    <script src="https://kit.fontawesome.com/021c9fb1b3.js" crossorigin="anonymous"></script>
+    <script defer type="module" src="../JavaScript/main.js"></script>
+</head>
+<body>
+    <div class="root_container">
+        <!-- header -->
+        <div class="header">
+            <h1>ALGORITHM</h1>
+            <h2 class="header__text">Sorting Algorithms Visualization</h2>
+        </div>
+
+        <!-- sorting__algorithms -->
+        <div class="sorting_algorithms">
+
+            <!-- left -->
+            <div class="description_left description">
+                <div class="name top"> 
+                    <h3>Bubble Sort</h3>
+                    <p>서로 인접한 두 원소를 비교해<br> 정렬하는 알고리즘</p>
+                </div>
+                    
+                <div class="time_complexity">
+                    <h3>Time Complexity</h3>
+                    <p>avg : O(n²)</p>
+                </div>
+            </div>
+            
+            <!-- center -->
+            <div class="animation_window">
+                <div class="inside_window">
+                    <canvas id="canvas"></canvas>
+                </div>
+            </div>
+
+            <!-- right -->
+            <div class="description_right description">
+                <div class="space"> </div>
+                <div>
+                    <div class="data_count top">
+                        <h3>Problem Size</h3>
+                        <p>100</p>
+                    </div>
+    
+                    <div class="initial_condition">
+                        <h3>Initial Condition</h3>
+                        <p>Random</p>
+                    </div>
+                </div>
+                
+            </div>
+
+        </div>
+
+        <!-- button -->
+        <div class="select_algorithm">
+            <button type="button" id="start" class="btn start_btn">Start</button>
+            <h2 class="select_algorithm_title">Bubble Sort Algorithm</h2>
+            
+            <div class="algorithms_btn">
+                <!-- selected_btn -->
+                <button type="button" data-name="Bubble" class="btn selected_btn">Bubble</button>
+
+                <button type="button" data-name="Selection" class="btn">Selection</button>
+    
+                <button type="button" data-name="Insertion" class="btn">Insertion</button>
+    
+                <button type="button" data-name="Merge" class="btn">Merge</button>
+    
+                <button type="button" data-name="Heap" class="btn">Heap</button>
+    
+                <button type="button" data-name="Quick" class="btn">Quick</button>
+            </div>
+        </div>
+
+        <!-- about animation -->
+        <div class="about_animation">
+            
+        </div>
+
+        <!-- footer -->
+        <div class="footer">
+
+        </div>
+    </div> 
+</body>
+</html>

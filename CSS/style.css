@@ -1,0 +1,128 @@
+:root {
+    /* color */
+    --color-background: #1a151f;
+    --color-widow-background: #1d1a23;
+    --color-dark-white: #b0b0b0;
+    --color-main-white: #e0e0e0;
+
+    --color-selected-bubble: #278afc;
+    --color-selected-selection: #a658f0;
+    --color-selected-insertion: #00ab66;
+    --color-selected-merge: #ffa282;
+    --color-selected-heap: #a43383;
+    --color-selected-quick: #fc3434;
+    /* font-size */
+    --button-with-size: 100px;
+    --button-height-size: 40px;
+    /* text */
+    --text-size: 3px
+}
+body, html {
+    font-family: 'Nanum Myeongjo' !important;
+    margin: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-background);
+    color: var(--color-main-white);
+}
+
+.root_container {
+    width: 80%;
+    display: flex;
+    flex-flow: column nowrap;
+    margin: auto;
+}
+
+.header {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+}
+.header>p {
+    color: var(--color-dark-white);
+}
+/* sorting_algorithm part */
+.sorting_algorithms {
+    width: 100%;
+    height: 50vh;
+    margin: 0%;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+}
+/* description */
+.description {
+    height: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    flex-basis: 20%;
+    flex-grow: 0;
+    text-align: left;
+}
+.description_right {
+    display: flex;
+    flex-flow: row nowrap;
+}
+.description_right>.space {
+    width: 50px;
+}
+.name p {
+    font-size: small;
+}
+.top {
+    margin-bottom: 100px;
+}
+/* window */
+.animation_window {
+    border: solid #8080807d 0.5px;
+    border-radius: 5px;
+    outline: 1px ridge var(--color-selected-bubble);
+    flex-grow: 1;
+    background-color: var(--color-widow-background);
+}
+#canvas {
+    width: 100%;
+    height: 100%;
+    /* background-color: #a43383; */
+}
+
+/* sorting_btn part */
+.select_algorithm {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-around;
+}
+.start_btn {
+    align-self: center;
+    margin-top: 20px;
+    margin-bottom: 40px;
+    padding: 0px;
+}
+.select_algorithm_title {
+    font-size: larger;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.algorithms_btn {
+    display: flex;
+    flex-flow: row nowrap;
+    width: 50vw;
+    margin: auto;
+    justify-content: space-around;
+}
+.btn {
+    width: var(--button-with-size);
+    height: var(--button-height-size);
+    border-radius: 5%;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    color: var(--color-main-white);
+    background-color: var(--color-widow-background);
+}
+/* selected button draw border */
+.selected_btn {
+    outline: 1px ridge var(--color-selected-bubble);
+    border-radius: 5%;
+}

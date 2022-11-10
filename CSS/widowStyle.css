@@ -1,0 +1,29 @@
+:root {
+    --color-inside_window-div: rgb(63, 63, 63);
+    --color-inside_window-selected-div: rgb(255, 153, 153);
+}
+.animation_window {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: flex-end;
+}
+.inside_window {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: flex-end;
+    width: 100%;
+    height: 80%;
+}
+
+.inside_window {
+    height: 80%;
+}
+.inside_window div{
+    font-size: var(--text-size);
+    background-color: var(--color-inside_window-div);
+    margin: 0px 1px;
+}
+.inside_window .selected_div {
+    background-color: var(--color-inside_window-selected-div);
+}
