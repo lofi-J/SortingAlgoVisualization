@@ -1,5 +1,5 @@
 'use strict';
-import { Infomation } from "./info-algo";
+import { Infomation } from "./info-algo.js";
 
 //variable for text
 export const startBtn = document.getElementById("start");
@@ -18,8 +18,8 @@ const ctx = canvas.getContext('2d');
 const canvasWidth = canvas.width; //300
 const canvasHeight = canvas.height; //150
 const speed = 1;
-let barHeightArray = [];
-let isSorted = false;
+const mergeSpeed = 100;
+let targetArray = []; // It is sort target
 const count = 100;
 const width = canvasWidth / count;
 const color_basic = '#3F3B6C';
@@ -71,22 +71,23 @@ startBtn.addEventListener('click', () => {
     else {
         switch(currAlgo) {
             case 'Bubble':
-                bubbleSort(barHeightArray);
+                bubbleSort(targetArray);
                 break;
             case 'Selection':
-                selcetionSort(barHeightArray);
+                selcetionSort(targetArray);
                 break;
             case 'Insertion':
-                insertionSort(barHeightArray);
+                insertionSort(targetArray);
                 break;
             case 'Merge':
-                mergeSort(barHeightArray);
+                mergeSortFunc();
                 break;
             case 'Heap':
-                heapSort(barHeightArray);
+                heapSort(targetArray);
+                console.log(targetArray);
                 break;
             case 'Quick':
-                quickSort(barHeightArray);
+                quickSort(targetArray);
                 break;
         }
     }
@@ -96,18 +97,17 @@ startBtn.addEventListener('click', () => {
 function createBar(count) {
     //first remove all
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-    barHeightArray = [];
+    targetArray = [];
 
     for(let i=0; i<count; i++) {
         var element = getRandomInt(1, count+1);
-        barHeightArray.push(element*1.5); //canvas's height is 150, count: 100
+        targetArray.push(element*1.5); //canvas's height is 150, count: 100
     }
 
-    isSorted = false;
     const width = (canvasWidth / count);
     ctx.fillStyle = color_basic;
     for(let i=0; i<count; i++) {
-        ctx.fillRect((width*i) + 1, canvasHeight - barHeightArray[i], width-1, barHeightArray[i]);
+        ctx.fillRect((width*i) + 1, canvasHeight - targetArray[i], width-1, targetArray[i]);
     }
 }
 
@@ -126,11 +126,11 @@ async function bubbleSort(array) {
                 swap(array, j, j+1);
                 curr = j;
             }
-            drawBubble(barHeightArray, endIndex, curr);
+            drawBubble(targetArray, endIndex, curr);
         }
         endIndex--;
     }
-    fulfill(barHeightArray);
+    fulfill(targetArray);
     isRun = false;
 }
 async function selcetionSort(array) {
@@ -144,18 +144,19 @@ async function selcetionSort(array) {
             if(array[min] > array[j]) {
                 min = j;
             }
-            drawSelection(barHeightArray, min, i);
+            drawSelection(targetArray, min, i);
         }
-        await delay(speed);
+        // await delay(speed);
         if(i != min) {
             swap(array, i, min);
-            drawSelection(barHeightArray, min, i);
+            drawSelection(targetArray, min, i);
         }
     }
-    fulfill(barHeightArray);
+    fulfill(targetArray);
     isRun = false;
 }
 async function insertionSort(array) {   
+    isRun = true;
     let curr;
     for(let i=1; i<array.length; i++) {
         curr = array[i];
@@ -169,13 +170,98 @@ async function insertionSort(array) {
         }
     }
     fulfill(array);
+    isRun = false;
 }
-async function mergeSort(array) {
+let temp = [];
+async function mergeSortFunc() {
+    isRun = true;
+    await mergeSort(targetArray, 0, targetArray.length-1);
+    await fulfill(targetArray);
+    isRun = false;
+}
+async function mergeSort(array, start, end) {
+    if(start < end) {
+        const mid = (start + end) >> 1;
+        await mergeSort(array, start, mid);
+        await mergeSort(array, mid+1, end);
+        await merge(array, start, mid, end);
+        await drawMerge(targetArray, start, end);
 
+        await delay(mergeSpeed);
+    }
+    async function merge(array, start, mid, end) {
+        let index = start;
+        let leftIndex = start;
+        let rightIndex = mid+1;
+        while(leftIndex<=mid && rightIndex <=end) {
+            if(array[leftIndex] < array[rightIndex]) {
+                temp[index] = array[leftIndex];
+                leftIndex++;
+            }
+            else {
+                temp[index] = array[rightIndex];
+                rightIndex++;
+            }
+            index++;
+        }
+        if(leftIndex > mid) {
+            for(let i=rightIndex; i<=end; i++) {
+                temp[index] = array[i];
+                index++;
+            }
+        }
+        else {
+            for(let i=leftIndex; i<=mid; i++) {
+                temp[index] = array[i];
+                index++;
+            }
+        }
+        index = start;
+        while(index <= end) {
+            array[index] = temp[index];
+            index++;
+        }
+    }
 }
+
 async function heapSort(array) {
+    isRun = true;
+    const len = array.length;
+    let lastIndex = len-1;
+    //build heap
+    for(let i=Math.floor(len/2)-1; i>=0; i--) {
+        await delay(mergeSpeed);
+        await drawHeap(array, lastIndex);
+        heapify(array, len, i);
+    }
+    //sort
+    while(lastIndex > 0) {
+        await delay(mergeSpeed);
+        await drawHeap(array, lastIndex);
+        swap(array, 0, lastIndex);
+        heapify(array, lastIndex, 0);
+        lastIndex--;
+    }
+    await fulfill(array);
+    isRun = false;
+    function heapify(array, range, index) {
+        let largest = index;
+        // l: leftChild, r: rightChild
+        const l = (index * 2) + 1;
+        const r = (index * 2) + 2;
     
+        if(l < range && array[largest] < array[l]) { largest = l; }
+        if(r < range && array[largest] < array[r]) { largest = r; }
+    
+        if(largest != index) {
+            swap(array, index, largest);
+            //again heapify
+            heapify(array, range, largest);
+        }
+    }
 }
+
+
 async function quickSort(array) {
     
 }
@@ -201,15 +287,15 @@ function drawBubble(array, endIndex, curr) {
     for(let i=0; i<array.length; i++) {
         if(i < endIndex) {
             ctx.fillStyle = color_basic;
-            ctx.fillRect((width*i) + 1, canvasHeight - barHeightArray[i], width-1, barHeightArray[i]);
+            ctx.fillRect((width*i) + 1, canvasHeight - targetArray[i], width-1, targetArray[i]);
             if(i === curr) {
                 ctx.fillStyle = red;
-                ctx.fillRect((width*i) + 1, canvasHeight - barHeightArray[i], width-1, barHeightArray[i]);
+                ctx.fillRect((width*i) + 1, canvasHeight - targetArray[i], width-1, targetArray[i]);
             }
         }
         else {
             ctx.fillStyle = yellow;
-            ctx.fillRect((width*i) + 1, canvasHeight - barHeightArray[i], width-1, barHeightArray[i]);
+            ctx.fillRect((width*i) + 1, canvasHeight - targetArray[i], width-1, targetArray[i]);
         }
     }
 }
@@ -218,14 +304,14 @@ function drawSelection(array, min, endIndex) {
 
     for(let i=0; i<array.length; i++) {
         ctx.fillStyle = color_basic;
-        ctx.fillRect((width*i) + 1, canvasHeight - barHeightArray[i], width-1, barHeightArray[i]);
+        ctx.fillRect((width*i) + 1, canvasHeight - targetArray[i], width-1, targetArray[i]);
         if(i === min) {
             ctx.fillStyle = red;
-            ctx.fillRect((width*i) + 1, canvasHeight - barHeightArray[i], width-1, barHeightArray[i]);
+            ctx.fillRect((width*i) + 1, canvasHeight - targetArray[i], width-1, targetArray[i]);
         }
         if(endIndex > i) {
             ctx.fillStyle = yellow;
-            ctx.fillRect((width*i) + 1, canvasHeight - barHeightArray[i], width-1, barHeightArray[i]);
+            ctx.fillRect((width*i) + 1, canvasHeight - targetArray[i], width-1, targetArray[i]);
         }
     }
 }
@@ -242,13 +328,37 @@ function drawInsertion(array, left, endIndex) {
         }
     }
 }
+async function drawMerge(array, start, end) {
+    ctx.clearRect(0,0,canvasWidth,canvasHeight);
+    
+    for(let i=0; i<array.length; i++) {
+        ctx.fillStyle = color_basic;
+        ctx.fillRect((width*i) + 1, canvasHeight - targetArray[i], width-1, targetArray[i]);
+    }
+    for(let i=start; i<=end; i++) {
+        ctx.fillStyle = red;
+        ctx.fillRect((width*i) + 1, canvasHeight - targetArray[i], width-1, targetArray[i]);
+    }
+}
+async function drawHeap(array, lastIndex) {
+    ctx.clearRect(0,0,canvasWidth,canvasHeight);
+
+    for(let i=0; i<array.length; i++) {
+        if(i > lastIndex) {
+            ctx.fillStyle = red;
+        } else {
+            ctx.fillStyle = color_basic;
+        }
+        ctx.fillRect((width*i) + 1, canvasHeight - targetArray[i], width-1, targetArray[i]);
+    }
+}
 
 
 async function fulfill(array) {
     ctx.fillStyle = color_fulfill;
     for(let i=0; i<array.length; i++) {
         await delay(speed);
-        ctx.fillRect((width*i) + 1, canvasHeight - barHeightArray[i], width-1, barHeightArray[i]);
+        ctx.fillRect((width*i) + 1, canvasHeight - targetArray[i], width-1, targetArray[i]);
     }
 }
 function getRandomInt(min, max) {
