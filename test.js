@@ -1,51 +1,20 @@
-// 'use strict';
+// function quickSort(arr, start, end) {
+//     if(start < end) {
+//         let pivot = partition(arr, start, end);
 
-// let array = [4,2,1,3,5,3,7,9,1];
-// /**
-//  *  init binary tree
-//  *          1
-//  *        /   \
-//  *       2     3
-//  *      / \   / \
-//  *     4   5 3   7
-//  *    /\ 
-//  *   9 1 
-//  */
-
-// function heapSort(array) {
-//     const len = array.length;
-//     let lastIndex = len-1;
-//     //build heap
-//     for(let i=Math.floor(len/2)-1; i>=0; i--) {
-//         heapify(array, len, i);
+//         quickSort(arr, start, pivot-1);
+//         quickSort(arr, pivot+1, end);
 //     }
-//     //sort
-//     while(lastIndex > 0) {
-//         swap(array, 0, lastIndex);
-//         heapify(array, lastIndex, 0);
-//         lastIndex--;
+//     function partition(arr, start, end) {
+//         let pivot = arr[end];
+//         let i = (start-1);
+//         for(let j = start; j <= end-1; j++) {
+//             if(arr[j] < pivot) {
+//                 i++;
+//                 swap(arr, i, j);
+//             }
+//         }
+//         swap(arr, i + 1, end);
+//         return (i+1);
 //     }
 // }
-// function heapify(array, range, index) {
-//     let largest = index;
-//     // l: leftChild, r: rightChild
-//     const l = (index * 2) + 1;
-//     const r = (index * 2) + 2;
-
-//     if(l < range && array[largest] < array[l]) { largest = l; }
-//     if(r < range && array[largest] < array[r]) { largest = r; }
-
-//     if(largest != index) {
-//         swap(array, index, largest);
-//         //again heapify
-//         heapify(array, range, largest);
-//     }
-// }
-// function swap(arr, a, b) {
-//     const temp = arr[a];
-//     arr[a] = arr[b];
-//     arr[b] = temp;
-// }
-// let te = [5,3,2,1,4];
-// heapSort(te);
-// console.log(te);

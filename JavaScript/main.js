@@ -9,7 +9,6 @@ let displayName = document.querySelector(".description h3");
 let displayDescription = document.querySelector(".description p");
 let timeComplexity = document.querySelector(".description .time_complexity p");
 let algorithmTitle = document.querySelector(".select_algorithm h2");
-//variable for color
 const animationWindow = document.querySelector(".animation_window");
 let prevBtn = buttonList.children[0];
 //variable for Visualization<canvas>
@@ -18,10 +17,11 @@ const ctx = canvas.getContext('2d');
 const canvasWidth = canvas.width; //300
 const canvasHeight = canvas.height; //150
 const speed = 1;
-const mergeSpeed = 100;
-let targetArray = []; // It is sort target
+const recursiveSpeed = 100;
+let targetArray = []; //sorting target
 const count = 100;
 const width = canvasWidth / count;
+//variable for color
 const color_basic = '#3F3B6C';
 const color_fulfill = '#379237'
 const red = '#E97777'
@@ -80,14 +80,13 @@ startBtn.addEventListener('click', () => {
                 insertionSort(targetArray);
                 break;
             case 'Merge':
-                mergeSortFunc();
+                mergeSortFunc(targetArray);
                 break;
             case 'Heap':
                 heapSort(targetArray);
-                console.log(targetArray);
                 break;
             case 'Quick':
-                quickSort(targetArray);
+                quickSortFunc(targetArray);
                 break;
         }
     }
@@ -173,10 +172,10 @@ async function insertionSort(array) {
     isRun = false;
 }
 let temp = [];
-async function mergeSortFunc() {
+async function mergeSortFunc(array) {
     isRun = true;
-    await mergeSort(targetArray, 0, targetArray.length-1);
-    await fulfill(targetArray);
+    await mergeSort(array, 0, array.length-1);
+    await fulfill(array);
     isRun = false;
 }
 async function mergeSort(array, start, end) {
@@ -187,7 +186,7 @@ async function mergeSort(array, start, end) {
         await merge(array, start, mid, end);
         await drawMerge(targetArray, start, end);
 
-        await delay(mergeSpeed);
+        await delay(recursiveSpeed);
     }
     async function merge(array, start, mid, end) {
         let index = start;
@@ -223,20 +222,19 @@ async function mergeSort(array, start, end) {
         }
     }
 }
-
 async function heapSort(array) {
     isRun = true;
     const len = array.length;
     let lastIndex = len-1;
     //build heap
     for(let i=Math.floor(len/2)-1; i>=0; i--) {
-        await delay(mergeSpeed);
+        await delay(recursiveSpeed);
         await drawHeap(array, lastIndex);
         heapify(array, len, i);
     }
     //sort
     while(lastIndex > 0) {
-        await delay(mergeSpeed);
+        await delay(recursiveSpeed);
         await drawHeap(array, lastIndex);
         swap(array, 0, lastIndex);
         heapify(array, lastIndex, 0);
@@ -260,11 +258,36 @@ async function heapSort(array) {
         }
     }
 }
-
-
-async function quickSort(array) {
-    
+async function quickSortFunc(array) {
+    isRun = true;
+    await quickSort(array, 0, array.length-1);
+    await fulfill(array);
+    isRun = false;
 }
+async function quickSort(array, start, end) {
+    if(start < end) {
+        let pivot = partition(array, start, end);
+        
+        await quickSort(array, start, pivot-1);
+        await quickSort(array, pivot+1, end);
+        
+        await drawQuick(array, pivot);
+        await delay(recursiveSpeed);
+    }
+    function partition(array, start, end) {
+        let pivot = array[end];
+        let i = (start-1);
+        for(let j = start; j <= end-1; j++) {
+            if(array[j] < pivot) {
+                i++;
+                swap(array, i, j);
+            }
+        }
+        swap(array, i + 1, end);
+        return (i+1);
+    }
+}
+
 
 // ==================================================== Utility functions ============================================================//
 function delay(ms) {
@@ -280,7 +303,13 @@ function swap(array, i, j) {
     array[i] = array[j];
     array[j] = temp;
 }
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max-min) + min);
+}
 
+// ==================================================== Draw functions ============================================================//
 function drawBubble(array, endIndex, curr) {
     ctx.clearRect(0,0,canvasWidth,canvasHeight);
 
@@ -352,17 +381,24 @@ async function drawHeap(array, lastIndex) {
         ctx.fillRect((width*i) + 1, canvasHeight - targetArray[i], width-1, targetArray[i]);
     }
 }
-
-
+async function drawQuick(array, pivot) {
+    ctx.clearRect(0,0,canvasWidth,canvasHeight);
+    
+    for(let i=0; i<array.length; i++) {
+        if(i === pivot && i !== array.length-1) {
+            ctx.fillStyle = red;
+            ctx.fillRect((width*i) + 1, canvasHeight - targetArray[i], width-1, targetArray[i]);    
+        }
+        else {
+            ctx.fillStyle = color_basic;
+            ctx.fillRect((width*i) + 1, canvasHeight - targetArray[i], width-1, targetArray[i]);
+        }
+    }
+}
 async function fulfill(array) {
     ctx.fillStyle = color_fulfill;
     for(let i=0; i<array.length; i++) {
         await delay(speed);
         ctx.fillRect((width*i) + 1, canvasHeight - targetArray[i], width-1, targetArray[i]);
     }
-}
-function getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max-min) + min);
 }
